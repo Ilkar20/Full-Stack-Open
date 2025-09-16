@@ -2,10 +2,14 @@ import { useState } from 'react'
 
 const StatisticLine = (props) => {
   return (
-    <div>
-      <p>{props.text} {props.value} {props.text === "positive" ? "%" : ""}</p>
-    </div>
-    
+    <table>
+      <tbody>
+        <tr>
+          <td>{props.text}</td>
+          <td>{props.value} {props.text === "positive" ? "%" : ""}</td>
+        </tr>
+      </tbody>
+    </table>
   )
 }
 
