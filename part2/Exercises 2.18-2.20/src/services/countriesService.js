@@ -11,4 +11,4 @@ const getByName = (name) => {
   return request.then((response) => response.data);
 }
 
-export default { getAllCountries };
+export default { getAllCountries, getByName };

@@ -2,16 +2,28 @@ import { useEffect, useState } from "react";
 import countriesService from "./services/countriesService";
 import SearchForm from "./components/SearchForm";
 import CountriesList from "./components/CountryList";
-import CountryDetail from "./components/CountryDetail";
 
 const App = () => {
   const [countries, setCountries] = useState([]);
+  const [allCountries, setAllCountries] = useState([]);
   const [query, setQuery] = useState("");
 
+  
   useEffect(() => {
-    countriesService.getAllCountries().then((data) => setCountries(data));
-    
+    countriesService.getAllCountries().then(all => setAllCountries(all));
   }, []);
+
+  
+  useEffect(() => {
+    if (query) {
+      const filtered = allCountries.filter(country =>
+        country.name.common.toLowerCase().includes(query.toLowerCase())
+      );
+      setCountries(filtered);
+    } else {
+      setCountries([]);
+    }
+  }, [query, allCountries]);
 
   return (
     <div>
