@@ -12,6 +12,15 @@ app.get('/info', (req, res) => {
   res.send(`<p>Phonebook has info for ${personCoiunt} people</p><p>${date}</p>`);
 });
  
+app.get('/api/persons/:id', (req, res) => {
+  const id = req.params.id;
+  const person = persons.find(p => p.id === id);
+  if (person) {
+    res.json(person);
+  } else {
+    res.status(404).end();
+  }
+});
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
