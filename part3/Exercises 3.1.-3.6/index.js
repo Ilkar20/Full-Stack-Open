@@ -2,6 +2,14 @@ const express = require('express');
 const app = express();
 const persons = require('./models/person');
 
+
+const generateId = () => {
+  const maxId = persons.length > 0
+    ? Math.max(...persons.map(n => Number(n.id)))
+    : 0
+  return String(maxId + 1)
+}
+
 app.get('/api/persons', (req, res) => {
   res.json(persons);
 });
@@ -31,6 +39,24 @@ app.delete('/api/persons/:id', (req, res) => {
   } else {
     res.status(404).end();
   }
+});
+
+app.post('/api/persons', express.json(), (req, res) => {
+  const { name, number } = req.body;
+  if (!name || !number) {
+    return res.status(400).json({ error: 'Name or number is missing' });
+  }
+  const existingPerson = persons.find(p => p.name === name);
+  if (existingPerson) {
+    return res.status(400).json({ error: 'Name must be unique' });
+  }
+  const newPerson = {
+    id: generateId(),
+    name: name,
+    number: number,
+  };
+  persons.push(newPerson);
+  res.status(201).json(newPerson);
 });
 
 const PORT = process.env.PORT || 3001
