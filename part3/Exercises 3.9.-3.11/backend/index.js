@@ -1,10 +1,10 @@
 const express = require('express');
 const app = express();
 const morgan = require("morgan");
-const cors = require('cors')
+// const cors = require('cors');
 const persons = require('./models/person');
 
-app.use(cors());
+// app.use(cors());
 app.use(express.json());
 
 morgan.token('body', (req) => {
@@ -12,6 +12,8 @@ morgan.token('body', (req) => {
 });
 
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
+
+app.use(express.static('dist'));
 
 const generateId = () => {
   const maxId = persons.length > 0
