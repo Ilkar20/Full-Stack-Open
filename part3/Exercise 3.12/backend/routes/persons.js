@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const persons = require('../models/person');
-const generateId = require('../utils/generateId');
+const personsController = require('../controllers/personsController')
 
 // GET all persons
 router.get('/', personsController.getAllPersons)
