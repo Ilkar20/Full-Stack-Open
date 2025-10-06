@@ -18,15 +18,14 @@ app.use(morganLogger)
 app.use('/api/persons', personsRouter)
 
 // Info route
-app.get('/info', (req, res) => {
+app.get('/info', (req, res, next) => {
   Person.countDocuments({})
     .then(count => {
       const info = `<p>Phonebook has info for ${count} people</p><p>${new Date()}</p>`
       res.send(info)
     })
     .catch(error => {
-      console.log(error)
-      res.status(500).send({ error: error.message })
+      next(error)
     })
 })
 
