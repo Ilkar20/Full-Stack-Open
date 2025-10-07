@@ -12,20 +12,24 @@ const App = () => {
   const [filter, setFilter] = useState('')
   const [notification, setNotification] = useState({ message: null, type: null })
 
-  useEffect(() => {
-    personsService
-      .getAll()
-      .then(initialPersons => {
-        setPersons(initialPersons)
-      })
-  }, [])
-
   const showNotification = (message, type='success') => {
     setNotification({ message, type })
     setTimeout(() => {
       setNotification({ message: null, type: null })
     }, 5000)
   }
+
+  useEffect(() => {
+    personsService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
+      })
+      .catch(error => {
+        showNotification('Failed to fetch persons from server', 'error')
+      })
+  }, [])
+
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -50,8 +54,7 @@ const App = () => {
             setNewNumber('');
           })
           .catch(error => {
-            showNotification(`Information of ${newName} has already been removed from server`, 'error');
-            setPersons(persons.filter(person => person.id !== existingPerson.id));
+            showNotification(error.response.data.error, 'error');
           });
       }
     }
