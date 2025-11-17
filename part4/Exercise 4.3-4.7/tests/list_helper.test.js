@@ -92,3 +92,44 @@ describe('total likes', () => {
     assert.strictEqual(result, expected)
   })
 })
+
+// Favorite blog tests
+describe('favorite blog', () => {
+  const blogs = [
+    {
+      id: '1',
+      title: 'React patterns',
+      author: 'Michael Chan',
+      url: 'https://reactpatterns.com/',
+      likes: 7
+    },
+    {
+      id: '2',
+      title: 'Go To Statement Considered Harmful',
+      author: 'Edsger W. Dijkstra',
+      url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+      likes: 5
+    },
+    {
+      id: '3',
+      title: 'Canonical string reduction',
+      author: 'Edsger W. Dijkstra',
+      url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
+      likes: 12
+    }
+  ]
+
+  test('of empty list is null', () => {
+    assert.strictEqual(listHelper.favoriteBlog([]), null)
+  })
+
+  test('when list has one blog, it is the favorite', () => {
+    const one = [blogs[0]]
+    assert.deepStrictEqual(listHelper.favoriteBlog(one), blogs[0])
+  })
+
+  test('of a bigger list is the one with most likes', () => {
+    const expected = blogs[2]
+    assert.deepStrictEqual(listHelper.favoriteBlog(blogs), expected)
+  })
+})
