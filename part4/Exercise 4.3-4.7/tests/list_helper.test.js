@@ -133,3 +133,54 @@ describe('favorite blog', () => {
     assert.deepStrictEqual(listHelper.favoriteBlog(blogs), expected)
   })
 })
+
+describe('most blogs', () => {
+  test('when list is empty, return null', () => {
+    const result = listHelper.mostBlogs([])
+    assert.strictEqual(result, null)
+  })
+
+  test('when list has multiple blogs, return the author with most blogs', () => {
+    const list = [
+      {
+        title: 'React patterns',
+        author: 'Michael Chan',
+        likes: 7
+      },
+      {
+        title: 'Go To Statement Considered Harmful',
+        author: 'Edsger W. Dijkstra',
+        likes: 5
+      },
+      {
+        title: 'Canonical string reduction',
+        author: 'Edsger W. Dijkstra',
+        likes: 12
+      },
+      {
+        title: 'First class tests',
+        author: 'Robert C. Martin',
+        likes: 10
+      },
+      {
+        title: 'TDD harms architecture',
+        author: 'Robert C. Martin',
+        likes: 0
+      },
+      {
+        title: 'Type wars',
+        author: 'Robert C. Martin',
+        likes: 2
+      }
+    ]
+
+    const result = listHelper.mostBlogs(list)
+
+    const expected = {
+      author: 'Robert C. Martin',
+      blogs: 3
+    }
+
+    assert.deepStrictEqual(result, expected)
+  })
+})
