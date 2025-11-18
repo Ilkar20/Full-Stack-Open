@@ -59,6 +59,24 @@ describe('addition of a new blog', () => {
   })
 })
 
+describe('blog post without likes property', () => {
+  test('defaults to zero likes', async () => {
+    const newBlog = {
+      title: 'Blog Without Likes',
+      author: 'No Likes Author',
+      url: 'http://example.com/blog-without-likes'
+    }
+
+    const response = await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    assert.strictEqual(response.body.likes, 0)
+  })
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
