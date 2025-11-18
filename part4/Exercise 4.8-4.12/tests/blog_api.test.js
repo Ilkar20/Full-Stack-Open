@@ -77,6 +77,32 @@ describe('blog post without likes property', () => {
   })
 })
 
+describe('blog post without title and url', () => {
+  test('fails with status 400 if title is missing ', async () => {
+    const newBlog = {
+      author: 'No Title Author',
+      url: 'http://example.com/invalid-blog'
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  })
+
+  test('fails with status 400 if url is missing ', async () => {
+    const newBlog = {
+      author: 'No URL Author',
+      title: 'Invalid Blog'
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  })
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
