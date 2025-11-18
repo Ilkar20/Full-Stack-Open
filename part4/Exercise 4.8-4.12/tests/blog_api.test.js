@@ -25,6 +25,15 @@ describe('when there is initially some blogs saved', () => {
 
     assert.strictEqual((await helper.blogsInDb()).length, helper.initialBlogs.length)
   })
+
+  test ('unique identifier property of the blog posts is named id', async () => {
+    const response = await api.get('/api/blogs')
+
+    const blogs = response.body
+    blogs.forEach(blog => {
+      assert.ok(blog.id)
+    })
+  })
 })
 
 after(async () => {
