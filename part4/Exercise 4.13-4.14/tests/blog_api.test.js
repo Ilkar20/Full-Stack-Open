@@ -119,6 +119,23 @@ describe('deletion of a blog', () => {
     const titles = blogsAtEnd.map(b => b.title)
     assert.ok(!titles.includes(blogToDelete.title))
   })
+
+  test('fails with status code 404 if blog does not exist', async () => {
+    const validNonExistingId = await helper.nonExistingBlog()
+
+    await api
+      .delete(`/api/blogs/${validNonExistingId}`)
+      .expect(404)
+  })
+
+  test('fails with status code 400 if id is invalid', async () => {
+    const invalidId = '12345invalidid'
+
+    await api
+      .delete(`/api/blogs/${invalidId}`)
+      .expect(400)
+  })
+
 })
 
 describe('updating a blog', () => {
