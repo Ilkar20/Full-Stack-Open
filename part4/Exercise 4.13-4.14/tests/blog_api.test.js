@@ -162,7 +162,7 @@ describe('updating a blog', () => {
   test('fails with status code 404 if blog does not exist', async () => {
     const validNonExistingId = await helper.nonExistingBlog()
 
-    const updatedBlogData = { title: 'Non-existing Blog'}
+    const updatedBlogData = { likes: 10 }
     await api
       .put(`/api/blogs/${validNonExistingId}`)
       .send(updatedBlogData)
