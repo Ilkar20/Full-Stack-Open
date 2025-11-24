@@ -57,7 +57,12 @@ blogRouter.put('/:id', async (request, response, next) => {
       blog,
       { new: true, runValidators: true, context: 'query' }
     )
-    response.json(updatedBlog)
+
+    if (updatedBlog) {
+      response.json(updatedBlog)
+    } else {
+      response.status(404).end()
+    }
   }
   catch (error) {
     next(error)

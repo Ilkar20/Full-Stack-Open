@@ -158,6 +158,26 @@ describe('updating a blog', () => {
 
     assert.strictEqual(response.body.likes, blogToUpdate.likes + 10)
   })
+
+  test('fails with status code 404 if blog does not exist', async () => {
+    const validNonExistingId = await helper.nonExistingBlog()
+
+    const updatedBlogData = { title: 'Non-existing Blog'}
+    await api
+      .put(`/api/blogs/${validNonExistingId}`)
+      .send(updatedBlogData)
+      .expect(404)
+  })
+
+  test('fails with status code 400 if id is invalid', async () => {
+    const invalidId = '12345invalidid'
+
+    const updatedBlogData = { title: 'Invalid ID Blog' }
+    await api
+      .put(`/api/blogs/${invalidId}`)
+      .send(updatedBlogData)
+      .expect(400)
+  })
 })
 
 after(async () => {
