@@ -106,7 +106,6 @@ describe('blog post without title and url', () => {
 describe('deletion of a blog', () => {
   test('succeeds with status code 204 if id is valid', async () => {
     const blogsAtStart = await helper.blogsInDb()
-    console.log(blogsAtStart)
     const blogToDelete = blogsAtStart[0]
 
     await api
