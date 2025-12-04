@@ -4,14 +4,22 @@ const supertest = require('supertest')
 const assert = require('assert')
 const app = require('../app')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const helper = require('./test_helper')
 
 const api = supertest(app)
 
 beforeEach(async () => {
   await Blog.deleteMany({})
+  await User.deleteMany({})
+
+  // Create a test user
+  const { token, user } = await helper.createTestUserAndGetToken()
+  helper.token = token
+  helper.user = user
+
   for (let blog of helper.initialBlogs) {
-    let blogObject = new Blog(blog)
+    let blogObject = new Blog({ ...blog, user: user._id })
     await blogObject.save()
   }
 })
@@ -47,6 +55,7 @@ describe('addition of a new blog', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${helper.token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -69,6 +78,7 @@ describe('blog post without likes property', () => {
 
     const response = await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${helper.token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -86,6 +96,7 @@ describe('blog post without title and url', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${helper.token}`)
       .send(newBlog)
       .expect(400)
   })
@@ -98,6 +109,7 @@ describe('blog post without title and url', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${helper.token}`)
       .send(newBlog)
       .expect(400)
   })

@@ -1,4 +1,6 @@
 const Blog = require('../models/blog')
+const User = require('../models/user')
+const jwt = require('jsonwebtoken')
 
 const initialBlogs = [
   {
@@ -51,11 +53,13 @@ const initialBlogs = [
   }
 ]
 
+// Return blogs currently in DB
 const blogsInDb = async () => {
   const blogs = await Blog.find({})
   return blogs.map(blog => blog.toJSON())
 }
 
+// Create non-existing blog ID
 const nonExistingBlog = async () => {
   const blog = new Blog({})
   await blog.save()
@@ -63,8 +67,31 @@ const nonExistingBlog = async () => {
   return blog._id.toString()
 }
 
+// Create a test user and return a valid JWT token
+const createTestUserAndGetToken = async () => {
+  const user = new User({
+    username: 'testuser',
+    name: 'Test User',
+    passwordHash: 'hashed_password'
+  })
+  const saveUser = await user.save()
+
+  const userForToken = {
+    username: saveUser.username,
+    id: saveUser._id
+  }
+
+  if (!process.env.SECRET) {
+    process.env.SECRET = 'test_secret_key_for_jwt'
+  }
+
+  const token = jwt.sign(userForToken, process.env.SECRET)
+  return { token, user: saveUser }
+}
+
 module.exports = {
   initialBlogs,
   blogsInDb,
-  nonExistingBlog
+  nonExistingBlog,
+  createTestUserAndGetToken
 }
