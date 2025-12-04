@@ -122,6 +122,7 @@ describe('deletion of a blog', () => {
 
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', `Bearer ${helper.token}`)
       .expect(204)
 
     const blogsAtEnd = await helper.blogsInDb()
@@ -136,6 +137,7 @@ describe('deletion of a blog', () => {
 
     await api
       .delete(`/api/blogs/${validNonExistingId}`)
+      .set('Authorization', `Bearer ${helper.token}`)
       .expect(404)
   })
 
@@ -144,6 +146,7 @@ describe('deletion of a blog', () => {
 
     await api
       .delete(`/api/blogs/${invalidId}`)
+      .set('Authorization', `Bearer ${helper.token}`)
       .expect(400)
   })
 
