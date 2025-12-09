@@ -66,6 +66,20 @@ describe('addition of a new blog', () => {
     const titles = blogsAtEnd.map(b => b.title)
     assert.ok(titles.includes('New Blog Post'))
   })
+
+  test('creation fails with status 401 if token not provided', async () => {
+    const newBlog = {
+      title: 'No Token Blog',
+      author: 'Anonymous',
+      url: 'http://example.com/no-token',
+      likes: 1
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(401)
+  })
 })
 
 describe('blog post without likes property', () => {
