@@ -14,9 +14,23 @@ const App = () => {
     )  
   }, [])
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
+
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      console.log('Restoring logged in user from local storage:', user)
+      setUser(user)
+      blogService.setToken(user.token)
+    }
+  }, [])
+
   const handleLogin = async (credentials) => {
     try {
       const user = await loginService.login(credentials)
+
+      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
+      blogService.setToken(user.token)
       setUser(user)
     } catch (error) {
       console.error('Login failed:', error)
@@ -25,6 +39,8 @@ const App = () => {
   }
 
   const handleLogout = () => {
+    window.localStorage.removeItem('loggedBlogAppUser')
+    blogService.setToken(null)
     setUser(null)
   }
 
