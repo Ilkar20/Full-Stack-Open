@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import blogService from '../services/blogs'
 
 const BlogForm = ({ onBlogCreated }) => {
   const [title, setTitle] = useState('')
@@ -8,9 +7,10 @@ const BlogForm = ({ onBlogCreated }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    const blog = { title, author, url }
-    await blogService.create(blog)
-    onBlogCreated()
+    onBlogCreated({ title, author, url })
+    setTitle('')
+    setAuthor('')
+    setUrl('')
   }
 
   return (
