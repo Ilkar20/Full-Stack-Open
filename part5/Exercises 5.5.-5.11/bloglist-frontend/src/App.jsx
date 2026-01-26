@@ -77,7 +77,6 @@ const App = () => {
       </div>
     )
   }
-  
 
   return (
     <div>
