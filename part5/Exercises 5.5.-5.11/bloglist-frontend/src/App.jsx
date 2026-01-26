@@ -68,6 +68,22 @@ const App = () => {
     }
   }
 
+  const handleLike = (id) => async () => {
+    const blog = blogs.find(b => b.id === id)
+    const updatedBlogObject = {
+      ...blog,
+      likes: blog.likes + 1
+    }
+
+    try {
+      await blogService.update(id, updatedBlogObject)
+      setBlogs(blogs.map(b => b.id === id ? updatedBlogObject : b))
+    } catch (error) {
+      console.error('Error updating likes:', error)
+      setNotification({ message: 'Failed to update likes', type: 'error' })
+    }
+  }
+
   if (user === null) {
     return (
       <div>
@@ -88,7 +104,7 @@ const App = () => {
         <BlogForm onBlogCreated={addBlog} />
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} handleLike={handleLike} />
       )}
     </div>
   )
