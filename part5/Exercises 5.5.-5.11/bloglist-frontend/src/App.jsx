@@ -83,6 +83,20 @@ const App = () => {
     }
   }
 
+  const handleDelete = (id) => async () => {
+    const blogDelete = blogs.find(b => b.id === id)
+
+    if(window.confirm('Remove blog ' + blogDelete.title + ' by ' + blogDelete.author + '?'))
+      try {
+        await blogService.remove(id)
+        setBlogs(blogs.filter(b => b.id !== id))
+        showNotification('Blog deleted successfully', 'success')
+      } catch (error) {
+      console.error('Error deleting blog:', error)
+      showNotification('Failed to delete blog', 'error')
+    }
+  }
+
   if (user === null) {
     return (
       <div>
@@ -107,7 +121,9 @@ const App = () => {
         <Blog 
         key={blog.id} 
         blog={blog} 
-        handleLike={handleLike} />
+        handleLike={handleLike}
+        handleDelete={handleDelete}
+        currentUser={user} />
       )}
     </div>
   )
