@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import Blog from './Blog'
 
 test('renders blog title and author, but not url or likes', () => {
@@ -32,4 +33,35 @@ test('renders blog title and author, but not url or likes', () => {
 
   expect(urlElement).toBeNull()
   expect(likesElement).toBeNull()
+})
+
+test('shows url and likes when the view button is clicked', async () => {
+  const blog = {
+    title: 'Testing React Components',
+    author: 'Test Author',
+    url: 'http://example.com/testing-react',
+    likes: 15,
+    user: {
+      name : 'Test User',
+      username: 'testuser'
+    }
+  }
+
+
+  const currentUser = {
+    name: 'Test User',
+    username: 'testuser'
+  }
+
+  render(<Blog blog={blog} currentUser={currentUser}/>)
+  const user = userEvent.setup()
+
+  const button = screen.getByText('view')
+  await user.click(button)
+
+  const urlElement = screen.getByText('http://example.com/testing-react')
+  const likesElement = screen.getByText('likes 15')
+
+  expect(urlElement).toBeDefined()
+  expect(likesElement).toBeDefined()
 })
