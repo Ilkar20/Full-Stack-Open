@@ -1,0 +1,35 @@
+import { render, screen } from '@testing-library/react'
+import Blog from './Blog'
+
+test('renders blog title and author, but not url or likes', () => {
+
+  const blog = {
+    title: 'Testing React Components',
+    author: 'Test Author',
+    url: 'http://example.com/testing-react',
+    likes: 15,
+    user: {
+      name : 'Test User',
+      username: 'testuser'
+    }
+  }
+
+
+  const currentUser = {
+    name: 'Test User',
+    username: 'testuser'
+  }
+
+  const { container } = render(<Blog blog={blog} currentUser={currentUser}/>)
+
+  const blogElement = container.querySelector('.blog-title-author')
+  expect(blogElement).toHaveTextContent(
+    'Testing React Components Test Author'
+  )
+
+  const urlElement = screen.queryByText('http://example.com/testing-react')
+  const likesElement = screen.queryByText('likes 15')
+
+  expect(urlElement).toBeNull()
+  expect(likesElement).toBeNull()
+})
