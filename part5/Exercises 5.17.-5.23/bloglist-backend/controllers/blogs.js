@@ -16,6 +16,7 @@ blogRouter.post('/', async (request, response, next) => {
     if (!user) {
       return response.status(401).json({ error: 'token missing or invalid' })
     }
+
     if (!title || !url) {
       return response.status(400).json({ error: 'title or url missing' })
     }
@@ -32,7 +33,9 @@ blogRouter.post('/', async (request, response, next) => {
     user.blogs = user.blogs.concat(savedBlog._id)
     await user.save()
 
-    response.status(201).json(savedBlog)
+    const blogToReturn = await Blog.findById(savedBlog._id).populate('user', { username: 1, name: 1 })
+
+    response.status(201).json(blogToReturn)
   } catch (error) {
     next(error)
   }
@@ -78,7 +81,7 @@ blogRouter.put('/:id', async (request, response, next) => {
       request.params.id,
       blog,
       { new: true, runValidators: true, context: 'query' }
-    )
+    ).populate('user', { username: 1, name: 1 })
 
     if (updatedBlog) {
       response.json(updatedBlog)

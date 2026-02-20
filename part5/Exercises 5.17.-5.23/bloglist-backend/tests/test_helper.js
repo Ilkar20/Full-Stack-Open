@@ -61,9 +61,18 @@ const blogsInDb = async () => {
 
 // Create non-existing blog ID
 const nonExistingBlog = async () => {
-  const blog = new Blog({})
+  const tempUser = new User({ username: 'tempuser', passwordHash: 'temphash' })
+  await tempUser.save()
+  const blog = new Blog({
+    title: 'Temp Blog',
+    author: 'Temp Author',
+    url: 'http://temp.com',
+    likes: 0,
+    user: tempUser._id
+  })
   await blog.save()
   await blog.deleteOne()
+  await tempUser.deleteOne()
   return blog._id.toString()
 }
 

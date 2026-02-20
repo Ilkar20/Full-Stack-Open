@@ -12,7 +12,7 @@ const Blog = ({ blog, handleLike, handleDelete, currentUser }) => {
   }
 
   const removeButtonStyle = {
-    backgroundColor: '#788dd3', // A nice "danger" red
+    backgroundColor: '#788dd3',
     color: 'black',
     border: 'none',
     padding: '5px 10px',
@@ -27,7 +27,11 @@ const Blog = ({ blog, handleLike, handleDelete, currentUser }) => {
     setVisible(!visible)
   }
 
-  const showRemoveButton = blog.user.username === currentUser.username
+  console.log('Current user:', currentUser)
+  console.log("Blog", blog)
+  console.log('Blog user:', blog.user)
+
+  const showRemoveButton = blog.user?.username === currentUser?.username
 
   return (
     <div style={blogStyle} className ="blog">
