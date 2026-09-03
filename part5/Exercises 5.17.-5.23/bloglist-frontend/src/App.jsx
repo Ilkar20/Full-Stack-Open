@@ -67,7 +67,7 @@ const App = () => {
     }
   }
 
-  const handleLike = (id) => async () => {
+  const handleLike = async (id) => {
     const blog = blogs.find(b => b.id === id)
     const updatedBlogObject = {
       ...blog,
@@ -83,7 +83,7 @@ const App = () => {
     }
   }
 
-  const handleDelete = (id) => async () => {
+  const handleDelete = async (id) => {
     const blogDelete = blogs.find(b => b.id === id)
 
     if(window.confirm('Remove blog ' + blogDelete.title + ' by ' + blogDelete.author + '?'))
