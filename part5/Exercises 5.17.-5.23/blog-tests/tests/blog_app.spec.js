@@ -81,5 +81,30 @@ describe('Blog app', () => {
       await blog.getByRole('button', { name: 'remove' }).click()
       await expect(blog).toHaveCount(0)
     })
+
+    test('Only the user who added a blog sees the delete button', async ({ page, request }) => {
+      await page.getByRole('button', { name: 'new blog' }).click()
+      await page.getByRole('textbox', { name: 'title' }).fill('Test Blog')
+      await page.getByRole('textbox', { name: 'author' }).fill('Ilkar')
+      await page.getByRole('textbox', { name: 'url' }).fill('http://testblog.com')
+      await page.getByRole('button', { name: 'create' }).click()
+      await page.getByRole('button', { name: 'logout' }).click()
+
+      await request.post('http://localhost:3003/api/users', {
+        data: {
+          name: 'Another User',
+          username: 'anotheruser',
+          password: 'anotherpassword'
+        }    
+      })
+
+      await page.getByRole('textbox', { name: 'username' }).fill('anotheruser')
+      await page.getByRole('textbox', { name: 'password' }).fill('anotherpassword')
+      await page.getByRole('button', { name: 'login' }).click()
+
+      const blog = page.locator('.blog').filter({ hasText: `Test Blog Ilkar` })
+      await blog.getByRole('button', { name: 'view' }).click()
+      await expect(blog.getByRole('button', { name: 'remove' })).toHaveCount(0)
+    })
   })
 })
