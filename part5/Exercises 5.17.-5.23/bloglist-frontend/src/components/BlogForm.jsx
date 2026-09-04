@@ -7,7 +7,7 @@ const BlogForm = ({ onBlogCreated }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    onBlogCreated({ title, author, url })
+    await onBlogCreated({ title, author, url })
     setTitle('')
     setAuthor('')
     setUrl('')

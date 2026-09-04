@@ -44,6 +44,7 @@ describe('Blog app', () => {
       await page.getByRole('textbox', { name: 'username' }).fill('Ilkar')
       await page.getByRole('textbox', { name: 'password' }).fill('Ilkar20000330')
       await page.getByRole('button', { name: 'login' }).click()
+      await expect(page.getByText('Yilikaer Yihamujiang logged in')).toBeVisible()
     })
 
     test('A new blog can be created', async ({ page }) => {
@@ -105,6 +106,40 @@ describe('Blog app', () => {
       const blog = page.locator('.blog').filter({ hasText: `Test Blog Ilkar` })
       await blog.getByRole('button', { name: 'view' }).click()
       await expect(blog.getByRole('button', { name: 'remove' })).toHaveCount(0)
+    })
+
+    test('Blogs are ordered according to likes in descending order', async ({ page }) => {
+      const blogs = [
+        { title: 'Blog 1', author: 'Author 1', url: 'http://blog1.com', likes: 0 },
+        { title: 'Blog 2', author: 'Author 2', url: 'http://blog2.com', likes: 1 },
+        { title: 'Blog 3', author: 'Author 3', url: 'http://blog3.com', likes: 2 }
+      ]
+
+      await page.getByRole('button', { name: 'create new blog' }).click()
+      for (const blog of blogs) {
+        await page.getByRole('textbox', { name: 'title' }).fill(blog.title)
+        await page.getByRole('textbox', { name: 'author' }).fill(blog.author)
+        await page.getByRole('textbox', { name: 'url' }).fill(blog.url)
+        await page.getByRole('button', { name: 'create' }).click()
+        await expect(page.getByText(`${blog.title} ${blog.author}`)).toBeVisible()
+      }
+      const blogElements = page.locator('.blog')
+
+      for (const blogData of blogs) {
+        const blog = blogElements.filter({
+          hasText: `${blogData.title} ${blogData.author}`
+        })
+        await blog.getByRole('button', { name: 'view' }).click()
+
+        for (let like = 1; like <= blogData.likes; like++) {
+          await blog.getByRole('button', { name: 'like' }).click()
+          await expect(blog).toContainText(`likes ${like}`)
+        }
+      }
+
+      await expect(blogElements.nth(0)).toContainText('Blog 3 Author 3')
+      await expect(blogElements.nth(1)).toContainText('Blog 2 Author 2')
+      await expect(blogElements.nth(2)).toContainText('Blog 1 Author 1')
     })
   })
 })
